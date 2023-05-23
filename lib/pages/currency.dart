@@ -35,7 +35,7 @@ class _CurrencyPageState extends State<CurrencyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Currency Converter'),
+        title: Text('Exchange Rate'),
         backgroundColor: Colors.teal,
       ),
       body: Padding(

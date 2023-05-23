@@ -12,19 +12,19 @@ class _TimePageState extends State<TimePage> {
 
   String getTimeByLocation(String location) {
     DateTime now = DateTime.now();
-    String time = DateFormat('HH:mm').format(now);
+    String time = DateFormat('HH:mm:ss').format(now); // Menambahkan format detik
 
     switch (location) {
       case 'WIB':
         return time;
       case 'WIT':
-        return DateFormat('HH:mm').format(now.add(Duration(hours: 1)));
+        return DateFormat('HH:mm:ss').format(now.add(Duration(hours: 1)));
       case 'WITA':
-        return DateFormat('HH:mm').format(now.add(Duration(hours: 2)));
+        return DateFormat('HH:mm:ss').format(now.add(Duration(hours: 2)));
       case 'London':
         var london = tz.getLocation('Europe/London');
         var londonTime = tz.TZDateTime.from(now, london);
-        return DateFormat('HH:mm').format(londonTime);
+        return DateFormat('HH:mm:ss').format(londonTime);
       default:
         return time;
     }
@@ -37,7 +37,7 @@ class _TimePageState extends State<TimePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Time Conversion'),
+        title: Text('Time Converter'),
         backgroundColor: Colors.teal,
       ),
       body: Center(
@@ -49,9 +49,14 @@ class _TimePageState extends State<TimePage> {
               style: TextStyle(fontSize: 20),
             ),
             SizedBox(height: 10),
-            Text(
-              getTimeByLocation(selectedLocation),
-              style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+            StreamBuilder(
+              stream: Stream.periodic(Duration(seconds: 1)), // Stream untuk memperbarui waktu setiap detik
+              builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                return Text(
+                  getTimeByLocation(selectedLocation),
+                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                );
+              },
             ),
             SizedBox(height: 10),
             Text(

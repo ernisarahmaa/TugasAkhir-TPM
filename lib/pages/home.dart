@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
               },
               color: Colors.teal,
               child: const Text(
-                'Currency Conversion',
+                'Exchange rate',
                 style: TextStyle(
                   color: Colors.white,
                 ),
@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
               },
               color: Colors.teal,
               child: const Text(
-                'Time Conversion',
+                'Time Converter',
                 style: TextStyle(
                   color: Colors.white,
                 ),
