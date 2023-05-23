@@ -10,6 +10,7 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Profile'),
         backgroundColor: Colors.teal,
+        automaticallyImplyLeading: false,
       ),
       body: Container(
         child: Center(

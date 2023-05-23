@@ -8,6 +8,7 @@ class KesranPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Kesan & Saran'),
         backgroundColor: Colors.teal,
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(

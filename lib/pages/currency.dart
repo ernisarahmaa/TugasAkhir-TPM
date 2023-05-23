@@ -1,115 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class CurrencyPage extends StatefulWidget {
-  const CurrencyPage({Key? key}) : super(key: key);
-
   @override
-  State<CurrencyPage> createState() => _CurrencyPageState();
+  _CurrencyPageState createState() => _CurrencyPageState();
 }
 
 class _CurrencyPageState extends State<CurrencyPage> {
-  String? valueschoose;
-  String? valueschoose1;
+  double riyalToRupiah = 3980.0; // Nilai tukar Riyal ke Rupiah
+  double dollarToRupiah = 14865.0; // Nilai tukar Dolar ke Rupiah
+  double yuanToRupiah = 2109.0; // Nilai tukar Yuan ke Rupiah
+
+  String selectedCurrency = 'Riyal';
+  double inputAmount = 0.0;
+  double convertedAmount = 0.0;
+
+  void convertCurrency() {
+    setState(() {
+      switch (selectedCurrency) {
+        case 'Riyal':
+          convertedAmount = inputAmount * riyalToRupiah;
+          break;
+        case 'Dollar':
+          convertedAmount = inputAmount * dollarToRupiah;
+          break;
+        case 'Yuan':
+          convertedAmount = inputAmount * yuanToRupiah;
+          break;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final _amount = TextEditingController();
-    final _tot = TextEditingController();
-    int cal;
-    int result;
-
-    var size = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Currency Converter'),
+        title: Text('Currency Converter'),
         backgroundColor: Colors.teal,
       ),
-      body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
-          child: Column(
-            children: [
-              const SizedBox(height: 15),
-              TextField(
-                controller: _amount,
-                decoration: InputDecoration(
-                    labelText: "Amount",
-                    labelStyle:
-                        const TextStyle(fontSize: 15, color: Colors.grey),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Enter Amount',
               ),
-              const SizedBox(height: 15),
-              DropdownButton<String>(
-                  value: this.valueschoose,
-                  items: <String>['CNY', 'SAR', 'USD'].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (value) =>
-                      setState(() => this.valueschoose = value)),
-              const SizedBox(height: 15),
-              DropdownButton<String>(
-                value: this.valueschoose1,
-                items: <String>['IDR'].map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (value) =>
-                    setState(() => this.valueschoose1 = value),
+              onChanged: (value) {
+                setState(() {
+                  inputAmount = double.tryParse(value) ?? 0.0;
+                });
+              },
+            ),
+            SizedBox(height: 16.0),
+            DropdownButton<String>(
+              value: selectedCurrency,
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedCurrency = newValue!;
+                });
+              },
+              items: ['Riyal', 'Dollar', 'Yuan'].map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: convertCurrency,
+              child: Text('Convert'),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.teal,
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextField(
-                controller: _tot,
-                decoration: InputDecoration(
-                    labelText: "Total",
-                    labelStyle: const TextStyle(fontSize: 15, color: Colors.grey),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10))),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              GestureDetector(
-                  onTap: () {
-                    if (valueschoose == "CNY" && valueschoose1 == "IDR") {
-                      cal = int.parse(_amount.text) * 2131;
-                      result = cal;
-                      _tot.text = result.toString();
-                    } else if (valueschoose == "SAR" &&
-                        valueschoose1 == "IDR") {
-                      cal = int.parse(_amount.text) * 3982;
-                      result = cal;
-                      _tot.text = result.toString();
-                    } else if (valueschoose == "USD" &&
-                        valueschoose1 == "IDR") {
-                      cal = int.parse(_amount.text) * 14936;
-                      result = cal;
-                      _tot.text = result.toString();
-                    }
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: size.height / 14,
-                    width: size.width,
-                    decoration: BoxDecoration(
-                        color: Colors.teal,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: const Text(
-                      "Convert",
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ))
-            ],
-          ),
+            ),
+            SizedBox(height: 16.0),
+            Text(
+              'Converted Amount:',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 10.0),
+            Text(
+              NumberFormat.currency(locale: 'id_ID', symbol: 'Rp').format(convertedAmount),
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ),
     );
